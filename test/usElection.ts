@@ -55,6 +55,16 @@ describe("USElection", function () {
     expect(await usElection.currentLeader()).to.equal(2); // TRUMP
   });
 
+  it("Should throw when trying to submit state with 0 seats", async function () {
+    const stateResults = ["Florida", 800, 1200, 0];
+    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("States must have at least 1 seat");
+  });
+
+  it("Should throw when trying to submit state result with a tie", async function () {
+    const stateResults = ["Alaska", 1200, 1200, 32];
+    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("There cannot be a tie");
+  });
+
   it("Should end the elections, get the leader and election status", async function () {
     const endElectionTx = await usElection.endElection();
 
@@ -66,4 +76,8 @@ describe("USElection", function () {
   });
 
   //TODO: ADD YOUR TESTS
+  it("Should throw when trying to submit state results after election have ended", async function () {
+    const stateResults = ["Texas", 800, 1200, 33];
+    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("The election has ended already");
+  });
 });
