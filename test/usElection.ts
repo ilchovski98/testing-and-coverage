@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("USElection", function () {
-  let usElectionFactory;
+  let usElectionFactory: USElection__factory;
   let usElection: USElection;
 
   before(async () => {
@@ -24,7 +24,12 @@ describe("USElection", function () {
   });
 
   it("Should submit state results and get current leader", async function () {
-    const stateResults = ["California", 1000, 900, 32];
+    const stateResults: USElection.StateResultStruct = {
+      name: "California",
+      votesBiden: ethers.BigNumber.from(1000),
+      votesTrump: ethers.BigNumber.from(900),
+      stateSeats: 32
+    };
 
     const submitStateResultsTx = await usElection.submitStateResult(
       stateResults
@@ -36,7 +41,12 @@ describe("USElection", function () {
   });
 
   it("Should throw when try to submit already submitted state results", async function () {
-    const stateResults = ["California", 1000, 900, 32];
+    const stateResults: USElection.StateResultStruct = {
+      name: "California",
+      votesBiden: ethers.BigNumber.from(1000),
+      votesTrump: ethers.BigNumber.from(900),
+      stateSeats: 32
+    };
 
     expect(usElection.submitStateResult(stateResults)).to.be.revertedWith(
       "This state result was already submitted!"
@@ -44,7 +54,12 @@ describe("USElection", function () {
   });
 
   it("Should submit state results and get current leader", async function () {
-    const stateResults = ["Ohaio", 800, 1200, 33];
+    const stateResults: USElection.StateResultStruct = {
+      name: "Ohaio",
+      votesBiden: ethers.BigNumber.from(800),
+      votesTrump: ethers.BigNumber.from(1200),
+      stateSeats: 33
+    };
 
     const submitStateResultsTx = await usElection.submitStateResult(
       stateResults
@@ -56,12 +71,17 @@ describe("USElection", function () {
   });
 
   it("Should throw when trying to submit state with 0 seats", async function () {
-    const stateResults = ["Florida", 800, 1200, 0];
+    const stateResults: USElection.StateResultStruct = {
+      name: "Florida",
+      votesBiden: ethers.BigNumber.from(800),
+      votesTrump: ethers.BigNumber.from(1200),
+      stateSeats: 0
+    };
     expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("States must have at least 1 seat");
   });
 
   it("Should throw when trying to submit state result with a tie", async function () {
-    const stateResults = ["Alaska", 1200, 1200, 32];
+    const stateResults: USElection.StateResultStruct = {name: "Alaska", votesBiden: ethers.BigNumber.from(1200), votesTrump: ethers.BigNumber.from(1200), stateSeats: 32};
     expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("There cannot be a tie");
   });
 
@@ -77,7 +97,12 @@ describe("USElection", function () {
 
   //TODO: ADD YOUR TESTS
   it("Should throw when trying to submit state results after election have ended", async function () {
-    const stateResults = ["Texas", 800, 1200, 33];
+    const stateResults: USElection.StateResultStruct = {
+      name: "Texas",
+      votesBiden: ethers.BigNumber.from(800),
+      votesTrump: ethers.BigNumber.from(1200),
+      stateSeats: 33
+    };
     expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("The election has ended already");
   });
 });
