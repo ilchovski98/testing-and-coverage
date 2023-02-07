@@ -48,7 +48,7 @@ describe("USElection", function () {
       stateSeats: 32
     };
 
-    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith(
+    await expect(usElection.submitStateResult(stateResults)).to.be.revertedWith(
       "This state result was already submitted!"
     );
   });
@@ -77,12 +77,23 @@ describe("USElection", function () {
       votesTrump: ethers.BigNumber.from(1200),
       stateSeats: 0
     };
-    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("States must have at least 1 seat");
+
+    await expect(usElection.submitStateResult(stateResults)).to.be.revertedWith(
+      "States must have at least 1 seat"
+    );
   });
 
   it("Should throw when trying to submit state result with a tie", async function () {
-    const stateResults: USElection.StateResultStruct = {name: "Alaska", votesBiden: ethers.BigNumber.from(1200), votesTrump: ethers.BigNumber.from(1200), stateSeats: 32};
-    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("There cannot be a tie");
+    const stateResults: USElection.StateResultStruct = {
+      name: "Alaska",
+      votesBiden: ethers.BigNumber.from(1200),
+      votesTrump: ethers.BigNumber.from(1200),
+      stateSeats: 32
+    };
+
+    await expect(usElection.submitStateResult(stateResults)).to.be.revertedWith(
+      "There cannot be a tie"
+    );
   });
 
   it("Should end the elections, get the leader and election status", async function () {
@@ -103,6 +114,9 @@ describe("USElection", function () {
       votesTrump: ethers.BigNumber.from(1200),
       stateSeats: 33
     };
-    expect(usElection.submitStateResult(stateResults)).to.be.revertedWith("The election has ended already");
+
+    await expect(usElection.submitStateResult(stateResults)).to.be.revertedWith(
+      "The election has ended already"
+    );
   });
 });
